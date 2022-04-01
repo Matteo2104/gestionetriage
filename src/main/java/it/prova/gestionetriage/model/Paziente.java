@@ -42,6 +42,17 @@ public class Paziente {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinTable(name = "paziente_dottore", joinColumns = @JoinColumn(name = "paziente_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "dottore_id", referencedColumnName = "ID"))
 	private Dottore dottore;
+	
+	
+	public Paziente() {}
+	public Paziente(Long id, String nome, String cognome, String codiceFiscale, Date dataRegistrazione, StatoPaziente stato) {
+		this.id = id;
+		this.nome = nome;
+		this.cognome = cognome;
+		this.codiceFiscale = codiceFiscale;
+		this.dataRegistrazione = dataRegistrazione;
+		this.stato = stato;
+	}
 
 	
 	
