@@ -44,6 +44,17 @@ public class Utente {
 	private Set<Ruolo> ruoli = new HashSet<>();
 
 
+	public Utente() {}
+	public Utente(Long id, String nome, String cognome, String username, String password, Date dataRegistrazione, StatoUtente stato) {
+		this.id = id;
+		this.nome = nome;
+		this.cognome = cognome;
+		this.username = username;
+		this.password = password;
+		this.dataRegistrazione = dataRegistrazione;
+		this.stato = stato;
+	}
+	
 	
 	public Long getId() {
 		return id;
