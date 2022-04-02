@@ -30,6 +30,14 @@ public class Dottore {
 	private Paziente pazienteAttualmenteInVisita;
 	
 	
+	public Dottore() {}
+	public Dottore(Long id, String nome, String cognome, String codiceDipendente) {
+		this.id = id;
+		this.nome = nome;
+		this.cognome = cognome;
+		this.codiceDipendente = codiceDipendente;
+	}
+	
 
 	public Long getId() {
 		return id;
