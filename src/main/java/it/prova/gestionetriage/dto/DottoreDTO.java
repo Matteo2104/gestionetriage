@@ -13,24 +13,23 @@ import it.prova.gestionetriage.model.Dottore;
 import it.prova.gestionetriage.model.Paziente;
 
 public class DottoreDTO {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
+	
 	private Long id;
 	
-	@Column(name = "nome")
 	private String nome;
 	
-	@Column(name = "cognome")
 	private String cognome;
 	
-	@Column(name = "codiceDipendente")
 	private String codiceDipendente;
 	
-	@OneToOne(mappedBy = "dottore")
 	private Paziente pazienteAttualmenteInVisita;
 	
 	public DottoreDTO() {}
+	public DottoreDTO(String nome, String cognome, String codiceDipendente) {
+		this.nome = nome;
+		this.cognome = cognome;
+		this.codiceDipendente = codiceDipendente;
+	}
 	public DottoreDTO(Long id, String nome, String cognome, String codiceDipendente) {
 		this.id = id;
 		this.nome = nome;
@@ -87,7 +86,7 @@ public class DottoreDTO {
 		return result;
 	}
 
-	public static List<DottoreDTO> buildPazienteDTOListFromModelList(List<Dottore> modelListInput, boolean includePaziente) {
+	public static List<DottoreDTO> buildDottoreDTOListFromModelList(List<Dottore> modelListInput, boolean includePaziente) {
 		return modelListInput.stream().map(dottoreEntity -> {
 			DottoreDTO result = DottoreDTO.buildDottoreDTOFromModel(dottoreEntity, includePaziente);
 			
