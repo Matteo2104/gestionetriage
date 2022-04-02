@@ -49,6 +49,8 @@ public class UtenteController {
 		if(utenteInput.getId() != null)
 			throw new IdNotNullForInsertException("Non è ammesso fornire un id per la creazione");
 		
+		System.out.println(utenteInput.buildUtenteModel());
+		
 		Utente utenteInserito = utenteService.inserisciNuovo(utenteInput.buildUtenteModel());
 		
 		//System.out.println(AirbusDTO.buildAirbusDTOFromModel(airbusInserito, false));

@@ -1,8 +1,11 @@
 package it.prova.gestionetriage.dto;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import it.prova.gestionetriage.model.Ruolo;
 import it.prova.gestionetriage.model.StatoUtente;
 import it.prova.gestionetriage.model.Utente;
 
@@ -87,7 +90,15 @@ public class UtenteDTO {
 	
 	
 	public Utente buildUtenteModel() {
-		return new Utente(this.id, this.nome, this.cognome, this.username, this.password, this.dataRegistrazione, this.stato);
+		Utente utenteModel = new Utente(this.id, this.nome, this.cognome, this.username, this.password, this.dataRegistrazione, this.stato);
+		if(this.ruoliIds != null && this.ruoliIds.length > 0) {
+			for (int i=0;i<this.ruoliIds.length;i++) {
+				utenteModel.getRuoli().add(new Ruolo(ruoliIds[i]));
+			}			
+		}
+		
+		return utenteModel;
+			
 	}
 
 	public static UtenteDTO buildUtenteDTOFromModel(Utente utenteModel, boolean includeRuoli) {
@@ -108,6 +119,15 @@ public class UtenteDTO {
 		return modelListInput.stream().map(utenteEntity -> {
 			return UtenteDTO.buildUtenteDTOFromModel(utenteEntity, includeRuoli);
 		}).collect(Collectors.toList());
+	}
+	
+	
+	
+	@Override
+	public String toString() {
+		return "UtenteDTO [id=" + id + ", nome=" + nome + ", cognome=" + cognome + ", username=" + username
+				+ ", password=" + password + ", dataRegistrazione=" + dataRegistrazione + ", stato=" + stato
+				+ ", ruoliIds=" + Arrays.toString(ruoliIds) + "]";
 	}
 	
 }
