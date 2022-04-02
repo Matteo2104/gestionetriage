@@ -1,9 +1,7 @@
 package it.prova.gestionetriage.controller.api;
 
 import java.util.List;
-
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,13 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import it.prova.gestionetriage.controller.api.exception.IdNotNullForInsertException;
-import it.prova.gestionetriage.controller.api.exception.PazienteNotEmptyException;
-import it.prova.gestionetriage.controller.api.exception.PazienteNotFoundException;
-import it.prova.gestionetriage.dto.PazienteDTO;
-import it.prova.gestionetriage.model.Paziente;
-import it.prova.gestionetriage.service.paziente.PazienteService;
+import it.prova.gestionetriage.controller.api.exception.UtenteNotFoundException;
+import it.prova.gestionetriage.dto.UtenteDTO;
+import it.prova.gestionetriage.model.Utente;
 import it.prova.gestionetriage.service.utente.UtenteService;
 
 @RestController
@@ -30,72 +25,70 @@ public class UtenteController {
 	@Autowired
 	private UtenteService utenteService;
 	
-	/*
+	
 	@GetMapping
-	public List<PazienteDTO> getAll() {
-		return PazienteDTO.buildPazienteDTOListFromModelList(pazienteService.listAllElements(), false); // con dottore?
+	public List<UtenteDTO> getAll() {
+		return UtenteDTO.createUtenteDTOListFromModelList(utenteService.listAllElementsEager(), true);
 	}
 	
 	@GetMapping("/{id}")
-	public PazienteDTO findById(@PathVariable(value = "id", required = true) long id) {
-		Paziente paziente = pazienteService.caricaSingoloElemento(id); // con dottore?
+	public UtenteDTO findById(@PathVariable(value = "id", required = true) long id) {
+		Utente utente = utenteService.caricaSingoloElementoEager(id);
 
-		if (paziente == null)
-			throw new PazienteNotFoundException("Paziente not found con id: " + id);
+		if (utente == null)
+			throw new UtenteNotFoundException("Utente not found con id: " + id);
 
-		return PazienteDTO.buildPazienteDTOFromModel(paziente, false); // true?
+		return UtenteDTO.buildUtenteDTOFromModel(utente, true); // true?
 	}
 	
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public PazienteDTO createNew(@Valid @RequestBody PazienteDTO pazienteInput) {
+	public UtenteDTO createNew(@Valid @RequestBody UtenteDTO utenteInput) {
 		//se mi viene inviato un id jpa lo interpreta come update ed a me (producer) non sta bene
-		if(pazienteInput.getId() != null)
+		if(utenteInput.getId() != null)
 			throw new IdNotNullForInsertException("Non è ammesso fornire un id per la creazione");
 		
-		Paziente pazienteInserito = pazienteService.inserisciNuovo(pazienteInput.buildPazienteModel());
+		Utente utenteInserito = utenteService.inserisciNuovo(utenteInput.buildUtenteModel());
 		
 		//System.out.println(AirbusDTO.buildAirbusDTOFromModel(airbusInserito, false));
 		
-		return PazienteDTO.buildPazienteDTOFromModel(pazienteInserito, false);
+		return UtenteDTO.buildUtenteDTOFromModel(utenteInserito, true);  // con ruoli ?
 	}
 	
 	
 	@PutMapping("/{id}")
-	public PazienteDTO update(@Valid @RequestBody PazienteDTO pazienteInput, @PathVariable(required = true) Long id) {
-		Paziente paziente = pazienteService.caricaSingoloElemento(id);
+	public UtenteDTO update(@Valid @RequestBody UtenteDTO utenteInput, @PathVariable(required = true) Long id) {
+		Utente utente = utenteService.caricaSingoloElemento(id);
 
-		if (paziente == null)
-			throw new PazienteNotFoundException("Paziente not found con id: " + id);
+		if (utente == null)
+			throw new UtenteNotFoundException("Utente not found con id: " + id);
 
-		pazienteInput.setId(id);
-		Paziente pazienteAggiornato = pazienteService.aggiorna(pazienteInput.buildPazienteModel());
-		return PazienteDTO.buildPazienteDTOFromModel(pazienteAggiornato, false);
+		utenteInput.setId(id);
+		Utente utenteAggiornato = utenteService.aggiorna(utenteInput.buildUtenteModel());
+		
+		return UtenteDTO.buildUtenteDTOFromModel(utenteAggiornato, true); // con ruoli ?
 	}
 	
 	
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public void delete(@PathVariable(required = true) Long id) {
-		Paziente paziente = pazienteService.caricaSingoloElementoEager(id);
+		Utente utente = utenteService.caricaSingoloElementoEager(id);
 
-		if (paziente == null)
-			throw new PazienteNotFoundException("Paziente not found con id: " + id);
+		if (utente == null)
+			throw new UtenteNotFoundException("Utente not found con id: " + id);
 		
-		
-		if (paziente.getDottore() != null)
-			throw new PazienteNotEmptyException("Paziente with id: " + id + " has a doctor associated, you cannot delete it");
-		
+		// come gestire la rimozione utente ???
 	
-		pazienteService.rimuovi(paziente);
+		//pazienteService.rimuovi(paziente);
 	}
 	
 	
 	@PostMapping("/search")
-	public List<PazienteDTO> search(@RequestBody PazienteDTO example) {
-		return PazienteDTO.buildPazienteDTOListFromModelList(
-				pazienteService.findByExample(example.buildPazienteModel(), null, null, null).toList(), false);
+	public List<UtenteDTO> search(@RequestBody UtenteDTO example) {
+		return UtenteDTO.createUtenteDTOListFromModelList(
+				utenteService.findByExample(example.buildUtenteModel(), null, null, null).toList(), true);
 	}
-	*/
+	
 }
