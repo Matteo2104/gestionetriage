@@ -69,7 +69,7 @@ public class UtenteController {
 		utenteInput.setId(id);
 		Utente utenteAggiornato = utenteService.aggiorna(utenteInput.buildUtenteModel());
 		
-		return UtenteDTO.buildUtenteDTOFromModel(utenteAggiornato, true); // con ruoli ?
+		return UtenteDTO.buildUtenteDTOFromModel(utenteAggiornato, true); 
 	}
 	
 	
@@ -84,6 +84,18 @@ public class UtenteController {
 		// come gestire la rimozione utente ???
 	
 		//pazienteService.rimuovi(paziente);
+	}
+	
+	@GetMapping("disabilita/{id}")
+	public UtenteDTO disabilita(@PathVariable(value = "id", required = true) long id) {
+		Utente utente = utenteService.caricaSingoloElementoEager(id);
+
+		if (utente == null)
+			throw new UtenteNotFoundException("Utente not found con id: " + id);
+		
+		utenteService.disabilita(utente);
+
+		return UtenteDTO.buildUtenteDTOFromModel(utente, true);
 	}
 	
 	

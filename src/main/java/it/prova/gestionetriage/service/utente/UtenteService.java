@@ -23,4 +23,6 @@ public interface UtenteService {
 
 	public Page<Utente> findByExample(Utente example, Integer pageNo, Integer pageSize, String sortBy);
 
+	public Utente disabilita(Utente utente);
+
 }

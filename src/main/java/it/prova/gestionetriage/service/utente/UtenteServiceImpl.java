@@ -15,6 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import it.prova.gestionetriage.model.Paziente;
+import it.prova.gestionetriage.model.StatoUtente;
 import it.prova.gestionetriage.model.Utente;
 import it.prova.gestionetriage.repository.PazienteRepository;
 import it.prova.gestionetriage.repository.UtenteRepository;
@@ -57,6 +58,13 @@ public class UtenteServiceImpl implements UtenteService {
 	@Override
 	@Transactional
 	public Utente aggiorna(Utente utente) {
+		return repository.save(utente);
+	}
+	
+	@Override
+	@Transactional
+	public Utente disabilita(Utente utente) {
+		utente.setStato(StatoUtente.DISABILITATO);
 		return repository.save(utente);
 	}
 	
