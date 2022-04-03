@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
+
 import it.prova.gestionetriage.controller.api.exception.DottoreNotEmptyException;
 import it.prova.gestionetriage.controller.api.exception.DottoreNotFoundException;
 import it.prova.gestionetriage.controller.api.exception.IdNotNullForInsertException;
@@ -73,6 +74,29 @@ public class DottoreController {
 	}
 	
 	
+	
+	
+
+	@DeleteMapping("/{id}")
+	public void delete(@PathVariable(value = "id", required = true) long id) {
+		Dottore dottore = dottoreService.caricaSingoloElemento(id);
+
+		if (dottore == null)
+			throw new DottoreNotFoundException("Dottore not found con id: " + id);
+		
+		if (dottore.getPazienteAttualmenteInVisita() != null && dottore.getPazienteAttualmenteInVisita().getId() != null)
+			throw new DottoreNotEmptyException("Dottore with id: " + id + " has a patient associated, you cannot delete it");
+		
+		// il block significa agire in maniera sincrona, attendendo la risposta
+		webClient.delete().uri("/" + id)
+				.retrieve().bodyToMono(DottoreDTO.class).block();
+
+		
+		dottoreService.rimuovi(dottore);
+	}
+	
+	
+	/*
 	@PutMapping("/{id}")
 	public DottoreDTO update(@Valid @RequestBody DottoreDTO dottoreInput, @PathVariable(required = true) Long id) {
 		Dottore dottore = dottoreService.caricaSingoloElemento(id);
@@ -86,27 +110,11 @@ public class DottoreController {
 	}
 	
 	
-	@DeleteMapping("/{id}")
-	@ResponseStatus(HttpStatus.OK)
-	public void delete(@PathVariable(required = true) Long id) {
-		Dottore dottore = dottoreService.caricaSingoloElementoEager(id);
-
-		if (dottore == null)
-			throw new DottoreNotFoundException("Dottore not found con id: " + id);
-		
-		
-		if (dottore.getPazienteAttualmenteInVisita() != null && dottore.getPazienteAttualmenteInVisita().getId() != null)
-			throw new DottoreNotEmptyException("Dottore with id: " + id + " has a patient associated, you cannot delete it");
-		
-	
-		dottoreService.rimuovi(dottore);
-	}
-	
-	
 	@PostMapping("/search")
 	public List<DottoreDTO> search(@RequestBody DottoreDTO example) {
 		return DottoreDTO.buildDottoreDTOListFromModelList(
 				dottoreService.findByExample(example.buildDottoreModel(), null, null, null).toList(), false);
 	}
+	*/
 	
 }
